@@ -1,0 +1,74 @@
+[
+    {
+        "nivel_de_dificultad": "FÁCIL",
+        "partida": 1,
+        "claves": [
+            {
+                "tipo_de_clave": "F",
+                "fila": 1,
+                "columna": 3,
+                "clave": 6,
+                "casillas": 2
+            },
+            {
+                "tipo_de_clave": "C",
+                "fila": 3,
+                "columna": 1,
+                "clave": 7,
+                "casillas": 2
+            },
+            {
+                "tipo_de_clave": "F",
+                "fila": 3,
+                "columna": 2,
+                "clave": 3,
+                "casillas": 1
+            },
+            {
+                "tipo_de_clave": "C",
+                "fila": 1,
+                "columna": 5,
+                "clave": 10,
+                "casillas": 2
+            },
+            {
+                "tipo_de_clave": "F",
+                "fila": 2,
+                "columna": 4,
+                "clave": 0,
+                "casillas": 0
+            },
+            {
+                "tipo_de_clave": "C",
+                "fila": 4,
+                "columna": 4,
+                "clave": 0,
+                "casillas": 0
+            },
+            {
+                "tipo_de_clave": "F",
+                "fila": 5,
+                "columna": 1,
+                "clave": 17,
+                "casillas": 3
+            },
+            {
+                "tipo_de_clave": "C",
+                "fila": 1,
+                "columna": 2,
+                "clave": 10,
+                "casillas": 3
+            }
+        ]
+    },
+    {
+        "nivel_de_dificultad": "FÁCIL",
+        "partida": 2,
+        "claves": []
+    },
+    {
+        "nivel_de_dificultad": "MEDIO",
+        "partida": 1,
+        "claves": []
+    }
+]
