@@ -1,0 +1,193 @@
+{
+    "jugador": "Ana",
+    "nivel": "medio",
+    "tablero_actual": [
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            5,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ]
+    ],
+    "tablero_claves": [
+        [
+            {
+                "tipo": "vacio",
+                "clave_fila": null,
+                "clave_columna": null,
+                "casillas_fila": 0,
+                "casillas_columna": 0
+            },
+            {
+                "tipo": "clave",
+                "clave_fila": 10,
+                "clave_columna": null,
+                "casillas_fila": 2,
+                "casillas_columna": 0
+            }
+        ],
+        [
+            {
+                "tipo": "clave",
+                "clave_fila": null,
+                "clave_columna": 7,
+                "casillas_fila": 0,
+                "casillas_columna": 2
+            },
+            {
+                "tipo": "rellenable",
+                "clave_fila": null,
+                "clave_columna": null,
+                "casillas_fila": 0,
+                "casillas_columna": 0
+            }
+        ],
+        [
+            {
+                "tipo": "rellenable",
+                "clave_fila": null,
+                "clave_columna": null,
+                "casillas_fila": 0,
+                "casillas_columna": 0
+            },
+            {
+                "tipo": "rellenable",
+                "clave_fila": null,
+                "clave_columna": null,
+                "casillas_fila": 0,
+                "casillas_columna": 0
+            }
+        ]
+    ],
+    "partida_info": {
+        "nivel_de_dificultad": "MEDIO",
+        "partida": 3,
+        "claves": [
+            {
+                "tipo_de_clave": "F",
+                "fila": 1,
+                "columna": 3,
+                "clave": 12,
+                "casillas": 2
+            },
+            {
+                "tipo_de_clave": "C",
+                "fila": 3,
+                "columna": 1,
+                "clave": 15,
+                "casillas": 2
+            }
+        ]
+    },
+    "pila_jugadas_realizadas": [
+        {
+            "fila": 1,
+            "columna": 2,
+            "valor_anterior": null,
+            "valor_nuevo": 5
+        },
+        {
+            "fila": 0,
+            "columna": 4,
+            "valor_anterior": null,
+            "valor_nuevo": 8
+        }
+    ],
+    "pila_jugadas_deshechas": [],
+    "tiempo_transcurrido": 125,
+    "tipo_reloj": "cronometro",
+    "tiempo_temporizador_segundos": 0
+}

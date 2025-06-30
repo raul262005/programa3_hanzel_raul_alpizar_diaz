@@ -1,0 +1,20 @@
+{
+    "facil": [
+        {
+            "jugador": "Juan",
+            "tiempo_segundos": 3600
+        },
+        {
+            "jugador": "Maria",
+            "tiempo_segundos": 4500
+        }
+    ],
+    "medio": [
+        {
+            "jugador": "Pedro",
+            "tiempo_segundos": 2700
+        }
+    ],
+    "dificil": [],
+    "experto": []
+}

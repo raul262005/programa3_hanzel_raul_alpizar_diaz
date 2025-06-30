@@ -57,10 +57,20 @@ class LogicaJuego:
         """
         partidas_raw = cargar_partidas() # Llama a la función de gestión de archivos para obtener todas las partidas.
         for partida in partidas_raw:
-            nivel = partida["nivel_de_dificultad"].lower() # Obtiene el nivel de dificultad en minúsculas.
+            # Si partida es una lista, conviértela a dict usando enumerate o corrige el acceso
+            # Aquí asumimos que cada 'partida' es un diccionario, pero si es una lista, accede por índices
+            # Por ejemplo, si partida = [id, nivel, claves, ...], ajusta así:
+            # nivel = partida[1].lower()
+            # Si no, deja como estaba.
+            if isinstance(partida, dict):
+                nivel = partida["nivel_de_dificultad"].lower()
+            elif isinstance(partida, list):
+                nivel = partida[1].lower()
+            else:
+                continue
             if nivel not in self.partidas_disponibles:
-                self.partidas_disponibles[nivel] = [] # Si el nivel no existe, crea una nueva lista para él.
-            self.partidas_disponibles[nivel].append(partida) # Añade la partida a la lista de su nivel.
+                self.partidas_disponibles[nivel] = []
+            self.partidas_disponibles[nivel].append(partida)
 
     def resetear_juego(self):
         """

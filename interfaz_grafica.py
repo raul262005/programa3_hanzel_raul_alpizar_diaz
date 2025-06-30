@@ -49,6 +49,13 @@ class InterfazGrafica:
         Crea y muestra la pantalla del menú principal del juego.
         Destruye cualquier widget anterior en la ventana para limpiar la pantalla.
         """
+        # Detiene el reloj si está activo y se está regresando al menú principal desde el juego.
+        if self.id_actualizacion_reloj:
+            self.ventana_maestra.after_cancel(self.id_actualizacion_reloj)
+            self.id_actualizacion_reloj = None
+        self.cronometro_activo = False
+        self.juego_iniciado = False # Asegura que el juego no esté marcado como iniciado al volver al menú.
+
         # Destruye todos los widgets hijos de la ventana maestra para limpiar la interfaz.
         for widget in self.ventana_maestra.winfo_children():
             widget.destroy()
@@ -151,8 +158,8 @@ class InterfazGrafica:
         self.boton_cargar_juego = tk.Button(marco_controles, text="CARGAR JUEGO", command=self.cargar_juego, width=20, height=2)
         self.boton_cargar_juego.pack(pady=5)
 
-        # Botón para volver al menú principal.
-        tk.Button(marco_controles, text="Volver al Menú Principal", command=self.crear_menu_principal, width=20, height=2).pack(pady=20)
+        # Botón para regresar al menú principal.
+        tk.Button(marco_controles, text="Regresar al Menú Principal", command=self.crear_menu_principal, width=20, height=2).pack(pady=20)
 
     def dibujar_tablero_vacio(self):
         """
@@ -336,7 +343,7 @@ class InterfazGrafica:
                     # Si el temporizador llega a cero, lo detiene.
                     self.cronometro_activo = False
                     # Pregunta al usuario si desea continuar el juego como cronómetro.
-                    respuesta = messagebox.askyesno("Tiempo Expirado", "¿DESEA CONTINUAR EL MISMO JUEGO (SI / NO)?")
+                    respuesta = messagebox.askyesno("Tiempo Expirado", "¿DESEA CONTINUAR EL MISMO JUEGO (SI/NO)?")
                     if respuesta:
                         # Si el usuario elige continuar, cambia el tipo de reloj a cronómetro.
                         self.configuracion.tipo_reloj = "cronometro"
@@ -371,16 +378,7 @@ class InterfazGrafica:
         messagebox.showinfo("¡Felicidades!", "¡EXCELENTE JUGADOR! TERMINÓ EL JUEGO CON ÉXITO.")
 
         # Calcula el tiempo final para el récord.
-        # Si era cronómetro, es el tiempo transcurrido. Si era temporizador, es el tiempo restante.
         tiempo_final = self.tiempo_transcurrido
-        if self.configuracion.tipo_reloj == "temporizador":
-            # Si el temporizador se agotó y se continuó como cronómetro, el tiempo final es el del cronómetro.
-            # Si el temporizador no se agotó y se terminó el juego, el tiempo final es el tiempo inicial menos el restante.
-            # Esto es una simplificación, la lógica exacta de "tiempo final" para temporizador puede variar.
-            # Para este caso, asumimos que el tiempo final es el tiempo que tardó en completarlo.
-            # Si el temporizador se agotó y se convirtió en cronómetro, el tiempo_transcurrido ya es el tiempo total.
-            pass # No se necesita ajuste adicional si tiempo_transcurrido ya es el total.
-
         # Guarda el récord del jugador.
         guardar_records(self.jugador_actual, tiempo_final, self.configuracion.nivel)
 
@@ -472,7 +470,7 @@ class InterfazGrafica:
             return
 
         # Pide confirmación al usuario antes de borrar el juego.
-        respuesta = messagebox.askyesno("Borrar Juego", "¿ESTÁ SEGURO DE BORRAR EL JUEGO (SI / NO)?")
+        respuesta = messagebox.askyesno("Borrar Juego", "¿ESTÁ SEGURO DE BORRAR EL JUEGO (SI/NO)?")
         if respuesta:
             self.logica_juego.borrar_juego_actual() # Llama a la lógica para borrar el juego.
             self.actualizar_tablero_gui() # Actualiza la GUI.
@@ -504,7 +502,7 @@ class InterfazGrafica:
             return
 
         # Pide confirmación al usuario.
-        respuesta = messagebox.askyesno("Terminar Juego", "¿ESTÁ SEGURO DE TERMINAR EL JUEGO (SI / NO)?")
+        respuesta = messagebox.askyesno("Terminar Juego", "¿ESTÁ SEGURO DE TERMINAR EL JUEGO (SI/NO)?")
         if respuesta:
             self.terminar_juego_forzado() # Llama a la función de terminación forzada.
             messagebox.showinfo("Juego Terminado", "El juego ha sido terminado.")
@@ -581,22 +579,28 @@ class InterfazGrafica:
         records_filtrados = {} # Diccionario para almacenar los récords que cumplen los filtros.
 
         # Itera sobre los niveles de dificultad en los récords cargados.
-        for nivel, lista_records in records.items():
-            # Aplica el filtro de nivel.
-            if filtro_nivel == "Todos los niveles" or nivel.lower() == filtro_nivel.replace("Nivel ", "").lower():
-                records_filtrados[nivel] = [] # Inicializa la lista para este nivel.
+        for nivel_key, lista_records in records.items(): # nivel_key es la clave normalizada (ej. "facil")
+            # Normaliza el filtro de nivel para la comparación.
+            # Si el filtro es "Todos los niveles", no se aplica filtro de nivel.
+            # Si es "Nivel fácil", se convierte a "facil" para comparar con la clave.
+            filtro_nivel_normalizado = filtro_nivel.lower().replace("nivel ", "")
+
+            if filtro_nivel == "Todos los niveles" or nivel_key == filtro_nivel_normalizado:
+                records_filtrados[nivel_key] = [] # Inicializa la lista para este nivel.
                 # Itera sobre los récords dentro de cada nivel.
                 for record in lista_records:
                     # Aplica el filtro de jugador.
                     if filtro_jugador == "Todos los jugadores" or (filtro_jugador == "Yo" and record["jugador"] == self.jugador_actual):
-                        records_filtrados[nivel].append(record)
+                        records_filtrados[nivel_key].append(record)
                 # Ordena los récords de cada nivel por tiempo de forma ascendente.
-                records_filtrados[nivel].sort(key=lambda x: x["tiempo_segundos"])
+                records_filtrados[nivel_key].sort(key=lambda x: x["tiempo_segundos"])
 
         # Muestra los récords filtrados en el área de texto.
-        for nivel, lista_records in records_filtrados.items():
+        for nivel_key, lista_records in records_filtrados.items():
             if lista_records: # Si hay récords para este nivel.
-                self.area_records.insert(tk.END, f"NIVEL {nivel.upper()}\n", "nivel_tag") # Inserta el título del nivel.
+                # Formatea el nombre del nivel para mostrarlo (ej. "facil" -> "FÁCIL").
+                nivel_display = nivel_key.replace("_", " ").upper()
+                self.area_records.insert(tk.END, f"NIVEL {nivel_display}\n", "nivel_tag") # Inserta el título del nivel.
                 for i, record in enumerate(lista_records):
                     # Formatea el tiempo de segundos a HH:MM:SS.
                     horas = record["tiempo_segundos"] // 3600
@@ -638,7 +642,7 @@ class InterfazGrafica:
         messagebox.showinfo("Juego Guardado", "El juego ha sido guardado exitosamente.")
 
         # Pregunta al usuario si desea continuar jugando.
-        respuesta = messagebox.askyesno("Continuar Juego", "¿VA A CONTINUAR JUGANDO (SI / NO)?")
+        respuesta = messagebox.askyesno("Continuar Juego", "¿VA A CONTINUAR JUGANDO (SI/NO)?")
         if not respuesta:
             self.terminar_juego_forzado() # Si no, termina el juego y vuelve al menú principal.
             self.crear_menu_principal()
@@ -891,6 +895,7 @@ class InterfazGrafica:
         pdf.multi_cell(0, 10, txt="   - RÉCORDS: Muestra los mejores tiempos por nivel de dificultad.")
         pdf.multi_cell(0, 10, txt="   - GUARDAR JUEGO: Guarda el estado actual de su partida para continuar después.")
         pdf.multi_cell(0, 10, txt="   - CARGAR JUEGO: Carga la última partida guardada.")
+        pdf.multi_cell(0, 10, txt="   - Regresar al Menú Principal: Vuelve a la pantalla de inicio del juego.")
         pdf.ln(5)
         pdf.multi_cell(0, 10, txt="4. Configuración:")
         pdf.multi_cell(0, 10, txt="   - Nivel: Elija entre Fácil, Medio, Difícil o Experto.")

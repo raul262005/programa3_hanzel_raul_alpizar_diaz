@@ -1,0 +1,5 @@
+{
+    "nivel": "f\u00e1cil",
+    "tipo_reloj": "no_usar",
+    "tiempo_temporizador_segundos": 0
+}

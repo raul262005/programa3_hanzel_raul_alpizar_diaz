@@ -12,6 +12,19 @@ ARCHIVO_RECORDS = "kakuro_records.txt" # Aunque es .txt, se guardará como JSON 
 ARCHIVO_JUEGO_ACTUAL = "kakuro_juego_actual.txt" # Aunque es .txt, se guardará como JSON.
 ARCHIVO_CONFIGURACION = "kakuro_configuracion.txt" # Aunque es .txt, se guardará como JSON.
 
+# --- Funciones de Normalización de Nivel ---
+def _normalizar_nombre_nivel(nivel_original):
+    """
+    Normaliza el nombre de un nivel para usarlo como clave en el JSON de récords.
+    Convierte a minúsculas y reemplaza espacios/caracteres especiales por guiones bajos.
+    Ej: "Nivel Fácil" -> "nivel_facil"
+        "FÁCIL" -> "facil"
+    """
+    # Se eliminan tildes y se reemplazan espacios por guiones bajos para claves JSON.
+    return nivel_original.lower().replace(" ", "_").replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u")
+
+# --- Funciones de Archivo ---
+
 def cargar_partidas():
     """
     Carga las definiciones de las partidas de Kakuro desde el archivo JSON.
@@ -40,7 +53,7 @@ def cargar_partidas():
         print(f"Error al cargar partidas de '{ARCHIVO_PARTIDAS}': {e}")
         return []
 
-def guardar_records(nombre_jugador, tiempo_segundos, nivel):
+def guardar_records(nombre_jugador, tiempo_segundos, nivel_original):
     """
     Guarda un nuevo récord de jugador en el archivo de récords.
     Los récords se organizan por nivel de dificultad.
@@ -48,23 +61,26 @@ def guardar_records(nombre_jugador, tiempo_segundos, nivel):
     Args:
         nombre_jugador (str): El nombre del jugador que logró el récord.
         tiempo_segundos (int): El tiempo en segundos que tardó el jugador.
-        nivel (str): El nivel de dificultad en el que se logró el récord.
+        nivel_original (str): El nivel de dificultad en el que se logró el récord (ej. "FÁCIL").
     """
     records = cargar_records() # Carga todos los récords existentes para actualizarlos.
+    
+    # Normaliza el nombre del nivel antes de usarlo como clave.
+    nivel_normalizado = _normalizar_nombre_nivel(nivel_original)
 
-    # Si el nivel no existe en el diccionario de récords, lo inicializa con una lista vacía.
-    if nivel not in records:
-        records[nivel] = []
+    # Si el nivel normalizado no existe en el diccionario de récords, lo inicializa con una lista vacía.
+    if nivel_normalizado not in records:
+        records[nivel_normalizado] = []
 
     # Añade el nuevo récord a la lista del nivel correspondiente.
-    records[nivel].append({
+    records[nivel_normalizado].append({
         "jugador": nombre_jugador,
         "tiempo_segundos": tiempo_segundos
     })
 
     # Opcional: Ordena los récords de este nivel por tiempo de forma ascendente antes de guardar.
     # Esto asegura que los récords siempre estén ordenados.
-    records[nivel].sort(key=lambda x: x["tiempo_segundos"])
+    records[nivel_normalizado].sort(key=lambda x: x["tiempo_segundos"])
 
     try:
         # Intenta abrir el archivo de récords en modo escritura y guardar el diccionario actualizado como JSON.
@@ -79,7 +95,7 @@ def cargar_records():
     Carga los récords de los jugadores desde el archivo.
 
     Returns:
-        dict: Un diccionario donde las claves son los niveles de dificultad
+        dict: Un diccionario donde las claves son los niveles de dificultad normalizados
               y los valores son listas de diccionarios de récords.
               Retorna un diccionario vacío si el archivo no existe o es inválido.
     """
@@ -166,8 +182,8 @@ def cargar_configuracion_inicial():
     if not os.path.exists(ARCHIVO_CONFIGURACION):
         # Si no existe, retorna una configuración por defecto.
         return {
-            "nivel": "facil",
-            "tipo_reloj": "cronometro",
+            "nivel": "facil", # Nivel de dificultad por defecto
+            "tipo_reloj": "cronometro", # Tipo de reloj por defecto
             "tiempo_temporizador_segundos": 0 # 0 significa que no hay tiempo preestablecido para temporizador.
         }
     try:
