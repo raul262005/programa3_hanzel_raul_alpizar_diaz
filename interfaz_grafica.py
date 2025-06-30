@@ -914,7 +914,7 @@ class InterfazGrafica:
         Juego Kakuro
         Versión: 1.0
         Fecha de Creación: Junio 2025
-        Autor: [Tu Nombre/Grupo]
+        Autor: Hanzel Raúl Alpízar Díaz
         """
         # Pregunta al usuario si desea generar un PDF de documentación.
         respuesta = messagebox.askyesno("Acerca de", info + "\n\n¿Desea generar un PDF con la documentación del proyecto?")
